@@ -32,45 +32,41 @@
      /**
       * Create all the rooms and link their exits together.
       */
-     private void createRooms()
-     {
-         Room  garden, corridor, room, kitchen, garage, bathroom, basement, livingRoom;
-       
-         // create the rooms
-         garden = new Room("No jardin da casa que você vai entrar");
-         corridor = new Room("No corredor princial da casa");
-         room = new Room("No quarto da casa");
-         garage = new Room("Na garagem da casa");
-         kitchen = new Room("Na cozinha da casa");
-         livingRoom = new Room("Na sala de estar da casa");
-         bathroom = new Room("No banheiro da casa");
-         basement = new Room("No porão da casa");
-
-         //North
-         //East
-         //South
-         //West
-         // initialise room exits
-         garden.setExit("North", corridor);
-         garden.setExit("East", corridor);
-         corridor.setExit("North", livingRoom);
-         corridor.setExit("East", garage);
-         corridor.setExit("South", garden);
-         corridor.setExit("West", room);
-         room.setExit("East", corridor);
-         garage.setExit("North",kitchen);
-         garage.setExit("West",corridor);
-         kitchen.setExit("South", garage);
-         kitchen.setExit("West", livingRoom);
-         livingRoom.setExit("North", bathroom);
-         livingRoom.setExit("East", kitchen);
-         livingRoom.setExit("South", corridor);
-         livingRoom.setExit("West", basement);
-         basement.setExit("East", livingRoom);
-         bathroom.setExit("South", livingRoom);
+    private void createRooms()
+      {
+          Room  garden, corridor, room, kitchen, garage, bathroom, basement, livingRoom;
+        
+          // create the rooms
+          garden = new Room("No jardin da casa que você vai entrar");
+          corridor = new Room("No corredor princial da casa");
+          room = new Room("No quarto da casa");
+          garage = new Room("Na garagem da casa");
+          kitchen = new Room("Na cozinha da casa");
+          livingRoom = new Room("Na sala de estar da casa");
+          bathroom = new Room("No banheiro da casa");
+          basement = new Room("No porão da casa");
  
-         currentRoom = garden;  // start game outside
-     }
+          // initialise room exits
+          garden.setExit("North", corridor);
+          garden.setExit("East", corridor);
+          corridor.setExit("North", livingRoom);
+          corridor.setExit("East", garage);
+          corridor.setExit("South", garden);
+          corridor.setExit("West", room);
+          room.setExit("East", corridor);
+          garage.setExit("North",kitchen);
+          garage.setExit("West",corridor);
+          kitchen.setExit("South", garage);
+          kitchen.setExit("West", livingRoom);
+          livingRoom.setExit("North", bathroom);
+          livingRoom.setExit("East", kitchen);
+          livingRoom.setExit("South", corridor);
+          livingRoom.setExit("West", basement);
+          basement.setExit("East", livingRoom);
+          bathroom.setExit("South", livingRoom);
+  
+          currentRoom = garden;  // start game outside
+      }
  
      /**
       *  Main play routine.  Loops until end of play.
@@ -100,10 +96,7 @@
          System.out.println("World of Zuul is a new, incredibly boring adventure game.");
          System.out.println("Type 'help' if you need help.");
          System.out.println();
-         System.out.println("You are " + currentRoom.getDescription());
-         System.out.print("Exits: ");
-         System.out.println(currentRoom.getExitString());
-         }
+         printLocationInfo();
      }
  
      /**
@@ -130,6 +123,9 @@
          else if (commandWord.equals("quit")) {
              wantToQuit = quit(command);
          }
+         else if (commandWord.equals("look")){
+             look();
+         }
  
          return wantToQuit;
      }
@@ -147,7 +143,7 @@
          System.out.println("around at the university.");
          System.out.println();
          System.out.println("Your command words are:");
-         System.out.println("   go quit help");
+         parser.showCommands();
      }
  
      /** 
@@ -166,42 +162,22 @@
  
          // Try to leave current room.
          Room nextRoom = null;
-         if(direction.equals("North")) {
-             nextRoom = currentRoom.northExit;
-         }
-         if(direction.equals("East")) {
-             nextRoom = currentRoom.eastExit;
-         }
-         if(direction.equals("South")) {
-             nextRoom = currentRoom.southExit;
-         }
-         if(direction.equals("West")) {
-             nextRoom = currentRoom.westExit;
-         }
- 
+         nextRoom = currentRoom.getExit(direction);
+         currentRoom = nextRoom;
          if (nextRoom == null) {
              System.out.println("There is no door!");
          }
          else {
-             currentRoom = nextRoom;
-             System.out.println("You are " + currentRoom.getDescription());
-             System.out.print("Exits: ");
-             if(currentRoom.northExit != null) {
-                 System.out.print("north ");
-             }
-             if(currentRoom.eastExit != null) {
-                 System.out.print("east ");
-             }
-             if(currentRoom.southExit != null) {
-                 System.out.print("south ");
-             }
-             if(currentRoom.westExit != null) {
-                 System.out.print("west ");
-             }
-             System.out.println();
+             printLocationInfo();
          }
      }
- 
+     
+     private void printLocationInfo(){
+         System.out.println("You are " + currentRoom.getDescription());
+         System.out.println(currentRoom.getExitString());
+         System.out.println();
+     }
+     
      /** 
       * "Quit" was entered. Check the rest of the command to see
       * whether we really quit the game.
@@ -216,5 +192,9 @@
          else {
              return true;  // signal that we want to quit
          }
+     }
+     
+     private void look(){
+         printLocationInfo();
      }
  }
