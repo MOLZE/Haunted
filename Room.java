@@ -18,6 +18,8 @@ import java.util.Set;
 public class Room 
 {
     private String description;
+    private String longDescription;
+    private Item item;
     
     private HashMap<String, Room> exits;
     /**
@@ -29,6 +31,9 @@ public class Room
     public Room(String description) 
     {
         this.description = description;
+        this.longDescription = longDescription;
+        this.item = item;
+        
         exits = new HashMap<>();
     }
     
@@ -55,27 +60,27 @@ public class Room
      */
     public void setExit(String direction, Room next) 
     {
-        if("north".equals(direction)) {
+        if("North" == direction) {
             //northExit = north;
             exits.put("North", next);
         }
-        if("east".equals(direction)) {
+        if("East" == direction) {
             //eastExit = east;
             exits.put("East", next);
         }
-        if("south".equals(direction)) {
+        if("South" == direction) {
             //southExit = south;
             exits.put("South", next);
         }
-        if("west".equals(direction)) {
+        if("West" == direction) {
             //westExit = west;
             exits.put("West", next);
         }
-        if("up".equals(direction)) {
+        if("Up" == direction) {
             //westExit = west;
             exits.put("West", next);
         }
-        if("down".equals(direction)) {
+        if("Down" == direction) {
             //westExit = west;
             exits.put("West", next);
         }
@@ -87,6 +92,15 @@ public class Room
     public String getDescription()
     {
         return description;
+    }
+    
+    public String getLongDescription()
+    {
+        return longDescription;
+    }
+    
+    public Item itemInRoom(){
+        return item;
     }
 
 }
