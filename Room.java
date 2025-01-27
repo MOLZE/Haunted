@@ -28,7 +28,7 @@ public class Room
      * "an open court yard".
      * @param description The room's description.
      */
-    public Room(String description) 
+    public Room(String description, String longDescription, Item item) 
     {
         this.description = description;
         this.longDescription = longDescription;
