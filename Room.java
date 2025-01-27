@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Set;
+
 /**
  * Class Room - a room in an adventure game.
  *
@@ -14,12 +17,9 @@
  */
 public class Room 
 {
-    public String description;
-    public Room northExit;
-    public Room southExit;
-    public Room eastExit;
-    public Room westExit;
-
+    private String description;
+    
+    private HashMap<String, Room> exits;
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
@@ -29,8 +29,22 @@ public class Room
     public Room(String description) 
     {
         this.description = description;
+        exits = new HashMap<>();
     }
-
+    
+    public Room getExit(String exit){
+        return exits.get(exit);
+    }
+    
+    public String getExitString(){
+        String exitString = "Exits: ";
+        Set<String> keys = exits.keySet();
+        for(String exit: keys){
+            exitString += " " + exit;
+        }
+        return exitString;
+    }
+    
     /**
      * Define the exits of this room.  Every direction either leads
      * to another room or is null (no exit there).
@@ -39,19 +53,31 @@ public class Room
      * @param south The south exit.
      * @param west The west exit.
      */
-    public void setExits(Room north, Room east, Room south, Room west) 
+    public void setExit(String direction, Room next) 
     {
-        if(north != null) {
-            northExit = north;
+        if("north".equals(direction)) {
+            //northExit = north;
+            exits.put("North", next);
         }
-        if(east != null) {
-            eastExit = east;
+        if("east".equals(direction)) {
+            //eastExit = east;
+            exits.put("East", next);
         }
-        if(south != null) {
-            southExit = south;
+        if("south".equals(direction)) {
+            //southExit = south;
+            exits.put("South", next);
         }
-        if(west != null) {
-            westExit = west;
+        if("west".equals(direction)) {
+            //westExit = west;
+            exits.put("West", next);
+        }
+        if("up".equals(direction)) {
+            //westExit = west;
+            exits.put("West", next);
+        }
+        if("down".equals(direction)) {
+            //westExit = west;
+            exits.put("West", next);
         }
     }
 

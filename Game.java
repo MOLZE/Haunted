@@ -34,23 +34,42 @@
       */
      private void createRooms()
      {
-         Room outside, theater, pub, lab, office;
+         Room  garden, corridor, room, kitchen, garage, bathroom, basement, livingRoom;
        
          // create the rooms
-         outside = new Room("outside the main entrance of the university");
-         theater = new Room("in a lecture theater");
-         pub = new Room("in the campus pub");
-         lab = new Room("in a computing lab");
-         office = new Room("in the computing admin office");
-         
+         garden = new Room("No jardin da casa que você vai entrar");
+         corridor = new Room("No corredor princial da casa");
+         room = new Room("No quarto da casa");
+         garage = new Room("Na garagem da casa");
+         kitchen = new Room("Na cozinha da casa");
+         livingRoom = new Room("Na sala de estar da casa");
+         bathroom = new Room("No banheiro da casa");
+         basement = new Room("No porão da casa");
+
+         //North
+         //East
+         //South
+         //West
          // initialise room exits
-         outside.setExits(null, theater, lab, pub);
-         theater.setExits(null, null, null, outside);
-         pub.setExits(null, outside, null, null);
-         lab.setExits(outside, office, null, null);
-         office.setExits(null, null, null, lab);
+         garden.setExit("North", corridor);
+         garden.setExit("East", corridor);
+         corridor.setExit("North", livingRoom);
+         corridor.setExit("East", garage);
+         corridor.setExit("South", garden);
+         corridor.setExit("West", room);
+         room.setExit("East", corridor);
+         garage.setExit("North",kitchen);
+         garage.setExit("West",corridor);
+         kitchen.setExit("South", garage);
+         kitchen.setExit("West", livingRoom);
+         livingRoom.setExit("North", bathroom);
+         livingRoom.setExit("East", kitchen);
+         livingRoom.setExit("South", corridor);
+         livingRoom.setExit("West", basement);
+         basement.setExit("East", livingRoom);
+         bathroom.setExit("South", livingRoom);
  
-         currentRoom = outside;  // start game outside
+         currentRoom = garden;  // start game outside
      }
  
      /**
@@ -83,19 +102,8 @@
          System.out.println();
          System.out.println("You are " + currentRoom.getDescription());
          System.out.print("Exits: ");
-         if(currentRoom.northExit != null) {
-             System.out.print("north ");
+         System.out.println(currentRoom.getExitString());
          }
-         if(currentRoom.eastExit != null) {
-             System.out.print("east ");
-         }
-         if(currentRoom.southExit != null) {
-             System.out.print("south ");
-         }
-         if(currentRoom.westExit != null) {
-             System.out.print("west ");
-         }
-         System.out.println();
      }
  
      /**
@@ -158,16 +166,16 @@
  
          // Try to leave current room.
          Room nextRoom = null;
-         if(direction.equals("north")) {
+         if(direction.equals("North")) {
              nextRoom = currentRoom.northExit;
          }
-         if(direction.equals("east")) {
+         if(direction.equals("East")) {
              nextRoom = currentRoom.eastExit;
          }
-         if(direction.equals("south")) {
+         if(direction.equals("South")) {
              nextRoom = currentRoom.southExit;
          }
-         if(direction.equals("west")) {
+         if(direction.equals("West")) {
              nextRoom = currentRoom.westExit;
          }
  
