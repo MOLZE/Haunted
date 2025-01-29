@@ -217,11 +217,11 @@ import java.util.Stack;
              printLocationInfo();
          }
             int bag = player.totalItems();
-            if(bag ==  6){
+            if(bag ==  5){
                 System.out.println("Congratulations, you managed to gather all the items and exorcise the ghost");
                 quit(command);
             }else{
-                System.out.println("You still need to collect some items..." + (6 - bag) + "items left.");
+                System.out.println("You still need to collect some items..." + (5 - bag) + "items left.");
             }
         }
      

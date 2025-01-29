@@ -38,7 +38,7 @@ public class Player
     }
 
     public void bagSize(){
-        maximumWeight += 3;
+        maximumWeight += 2;
     }
 
     public void listAllItemsWithPlayer(){
