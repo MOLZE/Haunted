@@ -168,6 +168,8 @@ import java.util.Stack;
              items();
          }else if (commandWord.equals("back")){
              back(command);
+         }else if (commandWord.equals("bag")){
+             itensWithPlayer();
          }
  
          return wantToQuit;
@@ -214,7 +216,14 @@ import java.util.Stack;
              currentRoom = nextRoom;
              printLocationInfo();
          }
-     }
+            int bag = player.totalItems();
+            if(bag ==  6){
+                System.out.println("Congratulations, you managed to gather all the items and exorcise the ghost");
+                quit(command);
+            }else{
+                System.out.println("You still need to collect some items..." + (6 - bag) + "items left.");
+            }
+        }
      
      private void printLocationInfo(){
          System.out.println("You are " + currentRoom.getDescription());
@@ -249,6 +258,9 @@ import java.util.Stack;
             Item control = currentRoom.getItemInRoom(index);
             System.out.println("You get a " + control.getDescription());
             player.getItem(control);
+            if (currentRoom.getDescription().equals("at the toilet")){
+                player.bagSize();
+            }
         }else{
             System.out.println("There are no items in this room.");    
         }

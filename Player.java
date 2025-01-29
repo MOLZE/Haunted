@@ -22,7 +22,7 @@ public class Player
     }
     public void getItem(Item item){
         if(item.giveWeight() + currentWeight > maximumWeight){
-            System.out.println("You can't carry items anymore...");
+            System.out.println("You can't carry items anymore..., go to the bathroom");
         }else{
             invPlayer.add(item);
             currentWeight = item.giveWeight() + currentWeight;
@@ -31,6 +31,14 @@ public class Player
     public void dropItem(){
         currentWeight = currentWeight - invPlayer.get(0).giveWeight();
         invPlayer.remove(0);
+    }
+
+    public int totalItems(){
+        return invPlayer.size();
+    }
+
+    public void bagSize(){
+        maximumWeight += 3;
     }
 
     public void listAllItemsWithPlayer(){
