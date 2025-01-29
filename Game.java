@@ -1,4 +1,3 @@
-
 import java.util.Stack;
 
 /**
@@ -20,10 +19,10 @@ import java.util.Stack;
 
  public class Game 
  {
-     private Parser parser;
-     private Room currentRoom;
-     private Stack<Room> previousRoom = new Stack();
-         
+    private Parser parser;
+    private Room currentRoom;
+    private Stack<Room> previousRoom = new Stack();
+    private Player player = new Player();
      /**
       * Create the game and initialise its internal map.
       */
@@ -40,45 +39,50 @@ import java.util.Stack;
       {
          Room  garden, corridor, room, kitchen, garage, bathroom, basement, livingRoom;
          Item doll, knife, candle, portrait, lighter, cross;
-         
+
          // Create the items
-         doll = new Item("Old doll, it has a creepy face, mostly because of its age!");
-         knife = new Item("Old rusted knife, perfect for stabing someone!");
-         candle = new Item("Normal plain candle, it does not even have a scent!");
-         portrait = new Item("A portrait of a young lady, wonder who she might be...");
-         lighter = new Item("Old rusted lighter, it's a miracle it still works!");
-         cross = new Item("Gold plated cross, beautiful, wonder if this is gonna be useful!");
+         doll = new Item("Old doll", 1);
+         knife = new Item("Rusted knife" ,1);
+         candle = new Item("Candle" ,1);
+         portrait = new Item("Portrait of a young lady" ,1);
+         lighter = new Item("Rusted lighter" ,1);
+         cross = new Item("Gold plated cross" ,0);
          
          
           // create the rooms
          garden = new Room("at the House entrance", 
-         "The house stands silent, its sagging roof and dark windows watching like hollow eyes. \nIvy crawls up its cracked stone walls, and the overgrown garden swallows the path to the door. \nAn unsettling quiet hangs in the air, broken only by the soft creak of the iron gate.\n"
-         ,null);
+         "The house stands silent, its sagging roof and dark windows watching like hollow eyes. \nIvy crawls up its cracked stone walls, and the overgrown garden swallows the path to the door. \nAn unsettling quiet hangs in the air, broken only by the soft creak of the iron gate.\n");
          corridor = new Room("at the main hall", 
          "The air inside is cold, thick with the scent of dust and decay. \nThe main hall stretches before you, dimly lit by the pale light filtering through broken windows. \nFaded wallpaper peels from the walls, revealing dark stains beneath. \nThe floor creaks with every step, as if the house itself is groaning in protest.\n"
-         , portrait);
+         );
+         corridor.addItem(portrait);
          room = new Room("at the sleeping room" ,
          "The room is still, almost unnaturally so, as if time has stopped here. \nThe bed lies untouched, its once-ornate frame now chipped and weathered, with moth-eaten sheets barely clinging to it. \nThe air feels thick, as though it’s holding its breath.\n "
-         , doll);
+         );
+         room.addItem(doll);
          garage = new Room("at the garage",
          "The garage is suffocatingly dark, the only light coming from a small, grimy window high on the wall. \nDust hangs in the air, thick and unmoving. Old tools lie scattered across a workbench, their edges rusted, forgotten. \nA car, covered in a tattered sheet, sits in the corner, its outline faint but imposing.\n"
-         , lighter);
+         );
+         garage.addItem(lighter);
          kitchen = new Room("at the kitchen", 
          "The stove is cold, its once-white tiles now stained and cracked. \nA faded, rotting smell lingers in the air, mixing with the metallic scent of rusting appliances.\n"
-         , knife);
+         );
+         kitchen.addItem(knife);
          livingRoom = new Room("at the living room", 
          "The furniture is shrouded in dust, the once-cozy space now a graveyard of forgotten belongings. \nA cold draft sweeps through, and the curtains sway, though no wind touches them.\n"
-         , candle);
+         );
+         livingRoom.addItem(candle);
          bathroom = new Room("at the toilet", 
          "The sink is cracked, water pooling in the corners as the mirror reflects nothing but emptiness. \nFaint, yellow stains mark the walls, as if the room has been forgotten for decades.\n"
-         , cross);
+         );
+         bathroom.addItem(cross);
          basement = new Room("at the basement", 
          "The stairs creak underfoot, leading to a cold, shadow-filled space. \nThe air is thick, musty, and the faint sound of dripping water echoes through the room.\n"
-         , null);
+         );
  
           // initialise room exits
           garden.setExit("North", corridor);
-          garden.setExit("East", corridor);
+          garden.setExit("East", garage);
           corridor.setExit("North", livingRoom);
           corridor.setExit("East", garage);
           corridor.setExit("South", garden);
@@ -156,8 +160,14 @@ import java.util.Stack;
          }
          else if (commandWord.equals("look")){
              look();
-         }else if(commandWord.equals("back")){
-            back(command);
+         }else if (commandWord.equals("get")){
+             get();
+         }else if (commandWord.equals("drop")){
+             drop();
+         }else if (commandWord.equals("items")){
+             items();
+         }else if (commandWord.equals("back")){
+             back(command);
          }
  
          return wantToQuit;
@@ -196,28 +206,14 @@ import java.util.Stack;
          // Try to leave current room.
          Room nextRoom = null;
          nextRoom = currentRoom.getExit(direction);
-         previousRoom.add(currentRoom);
-         currentRoom = nextRoom;
+         previousRoom.push(currentRoom);
          if (nextRoom == null) {
              System.out.println("There is no door!");
          }
          else {
+             currentRoom = nextRoom;
              printLocationInfo();
          }
-     }
-
-     private void back(Command command){ 
-        if(command.hasSecondWord()) {
-            System.out.println("Back what?");            
-        }
-        if(previousRoom.empty()){
-            System.out.println("There's no room before the current room.");
-            printLocationInfo();
-        }else{
-            currentRoom = previousRoom.pop();
-            previousRoom.pop();
-            printLocationInfo();
-        }
      }
      
      private void printLocationInfo(){
@@ -241,8 +237,6 @@ import java.util.Stack;
              return true;  // signal that we want to quit
          }
      }
-
-
      
      private void look(){
          System.out.println(currentRoom.getLongDescription());
@@ -250,9 +244,40 @@ import java.util.Stack;
      }
      
      private void get(){
-         if(currentRoom.itemInRoom() != null){
-             System.out.print("You get a " + currentRoom.itemInRoom().getDescription());
-         }
+        int index = 0;
+        if(currentRoom.thereAreItems()){
+            Item control = currentRoom.getItemInRoom(index);
+            System.out.println("You get a " + control.getDescription());
+            player.getItem(control);
+        }else{
+            System.out.println("There are no items in this room.");    
+        }
      }
- }
- 
+
+     private void drop(){
+        player.dropItem();
+     }
+     
+    private void items(){
+        System.out.println("Items in this room:");
+        currentRoom.listAllItems();    
+    }
+    
+    private void back(Command command){ 
+        if(command.hasSecondWord()) {
+            System.out.println("Back what?");            
+        }
+        if(previousRoom.empty()){
+            System.out.println("There's no room before the current room.");
+            printLocationInfo();
+        }else{
+            currentRoom = previousRoom.pop();
+            printLocationInfo();
+        }
+     }   
+    
+    private void itensWithPlayer(){
+        System.out.println("Items with the player:");
+        player.listAllItemsWithPlayer();
+    }
+}

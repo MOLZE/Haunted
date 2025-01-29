@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -19,7 +20,8 @@ public class Room
 {
     private String description;
     private String longDescription;
-    private Item item;
+    private ArrayList<Item> invRoom = new ArrayList<>();
+    private Player player = new Player();
     
     private HashMap<String, Room> exits;
     /**
@@ -28,16 +30,15 @@ public class Room
      * "an open court yard".
      * @param description The room's description.
      */
-    public Room(String description, String longDescription, Item item) 
+    public Room(String description, String longDescription) 
     {
         this.description = description;
         this.longDescription = longDescription;
-        this.item = item;
         
         exits = new HashMap<>();
     }
     
-    public Room getExit(String exit){
+    public Room getExit(String exit){    
         return exits.get(exit);
     }
     
@@ -60,27 +61,19 @@ public class Room
      */
     public void setExit(String direction, Room next) 
     {
-        if("North" == direction) {
+        if("North".equals(direction)) {
             //northExit = north;
             exits.put("North", next);
         }
-        if("East" == direction) {
+        if("East".equals(direction)) {
             //eastExit = east;
             exits.put("East", next);
         }
-        if("South" == direction) {
+        if("South".equals(direction)) {
             //southExit = south;
             exits.put("South", next);
         }
-        if("West" == direction) {
-            //westExit = west;
-            exits.put("West", next);
-        }
-        if("Up" == direction) {
-            //westExit = west;
-            exits.put("West", next);
-        }
-        if("Down" == direction) {
+        if("West".equals(direction)) {
             //westExit = west;
             exits.put("West", next);
         }
@@ -98,9 +91,25 @@ public class Room
     {
         return longDescription;
     }
-    
-    public Item itemInRoom(){
-        return item;
+
+    public void addItem(Item item){
+        invRoom.add(item);
     }
 
+    public void listAllItems(){
+        for(int i = 0; i < invRoom.size(); i++){
+            System.out.println(invRoom.get(i).getDescription());
+        }
+    }
+
+    public Item getItemInRoom(int index){        
+        Item control = invRoom.get(index);
+        player.getItem(control);
+        invRoom.remove(index);
+        return control;
+    }
+    
+    public boolean thereAreItems(){
+        return !invRoom.isEmpty();
+    }
 }
