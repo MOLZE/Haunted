@@ -267,7 +267,7 @@ import java.util.Stack;
      }
 
      private void drop(){
-        player.dropItem();
+        currentRoom.addItem(player.dropItem());
      }
      
     private void items(){
