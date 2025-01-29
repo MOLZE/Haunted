@@ -28,9 +28,11 @@ public class Player
             currentWeight = item.giveWeight() + currentWeight;
         }
     }
-    public void dropItem(){
+    public Item dropItem(){
         currentWeight = currentWeight - invPlayer.get(0).giveWeight();
+        Item drop = invPlayer.get(0);
         invPlayer.remove(0);
+        return drop;
     }
 
     public int totalItems(){
